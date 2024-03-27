@@ -1,0 +1,48 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-app-rs-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-app-rs
+  template:
+    metadata:
+      labels:
+        app: auth-app-rs
+    spec:
+      containers:
+        - name: auth-app-rs
+          image: redis:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+          - containerPort: 6379
+            name: auth-app-rs-svc
+          # envFrom:
+          #   - configMapRef:
+          #      name: auth-app-redis-secret
+          volumeMounts:
+            - mountPath: /var/lib/redis/data
+              name: auth-app-rs-volume
+      volumes:
+        - name: auth-app-rs-volume
+          persistentVolumeClaim:
+            claimName: auth-app-rs-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-app-rs-service
+  labels:
+    app: auth-app-rs
+spec:
+  selector:
+    app: auth-app-rs
+  ports:
+  - name: auth-app-rs-service-port
+    protocol: TCP
+    port: 6379
+    targetPort: auth-app-rs-svc

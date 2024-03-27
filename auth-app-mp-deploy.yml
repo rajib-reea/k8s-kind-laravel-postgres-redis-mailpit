@@ -1,0 +1,65 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-app-mp-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+     app: auth-app-mp
+  template:
+    metadata:
+      labels:
+        app: auth-app-mp
+    spec:
+      containers:
+        - name: auth-app-mp
+          image: axllent/mailpit:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+          - containerPort: 8025
+            name: auth-app-mp-ws
+          - containerPort: 1025
+            name: auth-app-mp-ss
+          volumeMounts:
+            - mountPath: /var/lib/mailpit/data
+              name: auth-app-mp-volume
+      volumes:
+        - name: auth-app-mp-volume
+          persistentVolumeClaim:
+            claimName: auth-app-mp-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-app-mp-ss-service
+  labels:
+    app: auth-app-mp
+spec:	 
+ selector:
+  app: auth-app-mp
+ ports:
+ - name: auth-app-mp-smtp-service-port
+   protocol: TCP
+   port: 1025
+   targetPort: auth-app-mp-ss
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-app-mp-ws-service
+  labels:
+    app: auth-app-mp
+spec:
+ type: NodePort
+ selector:
+  app: auth-app-mp
+ ports:
+ - name: auth-app-mp-web-service-port
+   protocol: TCP
+   port: 8025
+   targetPort: auth-app-mp-ws
+   nodePort: 30025

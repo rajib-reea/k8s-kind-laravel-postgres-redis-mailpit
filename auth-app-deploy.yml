@@ -1,0 +1,42 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-app-deployment
+  labels:
+    app: auth-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-app
+  template:
+    metadata:
+      labels:
+        app: auth-app
+    spec:
+      containers:
+      - name: auth-app
+        image: auth-app:latest
+        imagePullPolicy: IfNotPresent
+        #envFrom:
+        #- configMapRef:
+        #   name: auth-app-configmap
+        #- secretRef:
+        #   name: auth-app-secret
+        ports:
+        - containerPort: 80
+          name: auth-app-svc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-app-service
+spec:
+  selector:
+    app: auth-app
+  ports:
+  - name: auth-app-service-port
+    protocol: TCP
+    port: 80
+    targetPort: auth-app-svc

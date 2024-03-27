@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-app-pg-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-app-pg
+  template:
+    metadata:
+      labels:
+        app: auth-app-pg
+    spec:
+      containers:
+        - name: auth-app-pg
+          image: postgres:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+          - containerPort: 5432
+            name: auth-app-pg-svc
+          envFrom:
+            - configMapRef:
+               name: auth-app-pg-secret
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: auth-app-pg-volume
+      volumes:
+        - name: auth-app-pg-volume
+          persistentVolumeClaim:
+            claimName: auth-app-pg-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-app-pg-service
+  labels:
+    app: auth-app-pg
+spec:
+  selector:
+    app: auth-app-pg
+  ports:
+  - name: auth-app-pg-service-port
+    protocol: TCP
+    port: 5432
+    targetPort: auth-app-pg-svc

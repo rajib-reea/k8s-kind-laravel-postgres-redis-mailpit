@@ -1,0 +1,24 @@
+FROM  amazonlinux:latest
+RUN dnf update
+RUN dnf install -y nginx php php-gd php-zip php-pgsql php-devel php-pear python3-pip postgresql15
+RUN pip install supervisor
+COPY .kube/auth-app-supervisord.conf /etc/auth-app-supervisord.conf
+COPY .kube/auth-app-nginx.conf /etc/nginx/conf.d/auth-app-ngix.conf
+RUN mkdir -p /var/log/supervisor
+RUN mkdir -p /var/run/php-fpm
+#RUN chown -R nginx.nginx /run/php-fpm
+#RUN chown -R nginx.nginx /var/run/php-fpm
+RUN printf "\n" | pecl install mongodb
+RUN echo "extension=mongodb.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
+
+RUN mkdir -p  /usr/share/nginx/html/acc-auth-app
+WORKDIR  /usr/share/nginx/html/acc-auth-app
+COPY . .
+RUN curl -sS https://getcomposer.org/installer | php
+RUN mv composer.phar /usr/local/bin/composer
+RUN  composer install
+RUN chown -R nginx.nginx /usr/share/nginx/html/acc-auth-app
+RUN chmod -R 755 /usr/share/nginx/html/acc-auth-app
+RUN chmod -R 777 /usr/share/nginx/html/acc-auth-app/storage
+EXPOSE 80
+CMD ["/usr/local/bin/supervisord","-n", "-c", "/etc/auth-app-supervisord.conf"]

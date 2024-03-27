@@ -1,0 +1,6 @@
+.kube/*
+.env*
+.git/*
+.github/*
+.gitlab/*
+
