@@ -28,7 +28,7 @@ Prior Considerations:
 ```
 
 ```
-Commands:
+Commands for Creating and Running Cluster:
 0. create docker image:
 docker build -t auth-app . -f .kube/auth-app-docker.yml
 docker run --rm -it --name auth-app auth-app bash
@@ -118,7 +118,7 @@ QUIT
 ```
 ```
 9. [redis pod/service]
-mkdir -p .kube/.volume/rs and get the full path using pwd and put it in auth-app-rs-pv.yml file.
+
 kubectl apply -f .kube/auth-app-rs-pv.yml
 kubectl apply -f .kube/auth-app-rs-pvc.yml
 kubectl apply -f .kube/auth-app-rs-deploy.yml
@@ -140,7 +140,7 @@ QUIT
 ```
 ```
 10. [mailpit pod/service]
-mkdir -p .kube/.volume/mp and get the full path using pwd and put it in auth-app-mp-pv.yml file.
+
 kubectl apply -f .kube/auth-app-mp-pv.yml
 kubectl apply -f .kube/auth-app-mp-pvc.yml
 kubectl apply -f .kube/auth-app-mp-deploy.yml
@@ -169,6 +169,7 @@ we can access mailpit web ui at: http://localhost:8025/
 ```
 
 ```
+Command for Removing a Cluster:
 kind delete cluster --name auth-app-cluster
 ```
 
