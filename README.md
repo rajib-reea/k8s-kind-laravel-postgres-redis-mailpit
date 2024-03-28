@@ -4,10 +4,27 @@ Prior Considerations:
  2. We have used Kind for making Kubernetes cluster.
  3. We have used the name of our app is auth-app. You need to change the app name.
  4. Put the .kube folder in the root dir of your laravel app.
-```
+ 5. The commands assume you are running them from the laravel_root_folder
+ 5. chnage pv files accroding to your path of directrories.
+  A. postgres:
+     cd laravel_root_folder/.kube
+     mkdir -p .volume/pg
+     cd .volume/pg
+     pwd
+    set this value in auth-app-pg-pv.yml file with hostPath variable.
 
-```
-chnage pv files accroding to your path of directrories.
+  B. redis:
+     cd laravel_root_folder/.kube
+     mkdir -p .volume/rs
+     cd .volume/rs
+     pwd
+    set this value in auth-app-rs-pv.yml file with hostPath variable.
+  B. mailpit:
+     cd laravel_root_folder/.kube
+     mkdir -p .volume/mp
+     cd .volume/mp
+     pwd
+    set this value in auth-app-mp-pv.yml file with hostPath variable.
 ```
 
 ```
@@ -73,8 +90,7 @@ curl -i http://localhost/auth-app
 
 ```
 8. [postgresql pod/service]
-create a directory inside the app using: mkdir -p .volume/pg and get the full path using pwd command
- and set this value in auth-app-pg-pv.yml file with hostPath variable.
+
 kubectl apply -f .kube/auth-app-pg-secret.yml
 kubectl apply -f .kube/auth-app-pg-pv.yml
 kubectl apply -f .kube/auth-app-pg-pvc.yml
