@@ -1,8 +1,9 @@
 ```
-### The purpose of this repo is learning kubernetes.
-### We have used Kind for making Kubernetes cluster.
-### We have used the name of our app is auth-app. You need to change the app name.
-### Put the .kube folder in the root dir of your laravel app.
+Prior Considerations:
+ 1. The purpose of this repo is learning kubernetes.
+ 2. We have used Kind for making Kubernetes cluster.
+ 3. We have used the name of our app is auth-app. You need to change the app name.
+ 4. Put the .kube folder in the root dir of your laravel app.
 ```
 
 ```
