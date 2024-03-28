@@ -5,7 +5,7 @@ Prior Considerations:
  3. We have used the name of our app is auth-app. You need to change the app name.
  4. Put the .kube folder in the root dir of your laravel app.
  5. The commands assume you are running them from the laravel_root_folder
- 5. chnage pv files accroding to your path of directrories.
+ 6. chnage pv files accroding to your path of directrories.
   A. postgres:
      cd laravel_root_folder/.kube
      mkdir -p .volume/pg
@@ -28,7 +28,7 @@ Prior Considerations:
 ```
 
 ```
-[using local files mostly]
+Commands:
 0. create docker image:
 docker build -t auth-app . -f .kube/auth-app-docker.yml
 docker run --rm -it --name auth-app auth-app bash
